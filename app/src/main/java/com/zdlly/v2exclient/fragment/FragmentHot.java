@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.zdlly.v2exclient.R;
 import com.zdlly.v2exclient.activity.HotDetailActivity;
 import com.zdlly.v2exclient.adapter.FirstRecyclerAdapter;
-import com.zdlly.v2exclient.bean.hot;
+import com.zdlly.v2exclient.bean.Hot;
 import com.zdlly.v2exclient.listener.OnItemClickListener;
 import com.zdlly.v2exclient.network.HotService;
 
@@ -29,9 +29,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class FragmentHot extends Fragment implements Callback<List<hot>>, SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
+public class FragmentHot extends Fragment implements Callback<List<Hot>>, SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
     private RecyclerView firstRecycler;
-    private List<hot> hotList;
+    private List<Hot> hotList;
     private SwipeRefreshLayout swipeRefresh;
     private FirstRecyclerAdapter firstRecyclerAdapter;
 
@@ -41,7 +41,7 @@ public class FragmentHot extends Fragment implements Callback<List<hot>>, SwipeR
             build();
 
     HotService service = retrofit.create(HotService.class);
-    Call<List<hot>> call = service.getHotLists();
+    Call<List<Hot>> call = service.getHotLists();
 
     public FragmentHot() {
     }
@@ -69,7 +69,7 @@ public class FragmentHot extends Fragment implements Callback<List<hot>>, SwipeR
     }
 
     @Override
-    public void onResponse(Call<List<hot>> call, Response<List<hot>> response) {
+    public void onResponse(Call<List<Hot>> call, Response<List<Hot>> response) {
         hotList = response.body();
         if(firstRecycler.getAdapter()==null){
             firstRecyclerAdapter=new FirstRecyclerAdapter(getContext(), hotList);
@@ -83,7 +83,7 @@ public class FragmentHot extends Fragment implements Callback<List<hot>>, SwipeR
     }
 
     @Override
-    public void onFailure(Call<List<hot>> call, Throwable t) {
+    public void onFailure(Call<List<Hot>> call, Throwable t) {
         Toast.makeText(getContext(), "读取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
     }
 
@@ -108,7 +108,7 @@ public class FragmentHot extends Fragment implements Callback<List<hot>>, SwipeR
         int position=firstRecycler.getChildAdapterPosition(view);
         Intent hotDetailIntent=new Intent(getContext(), HotDetailActivity.class);
         Bundle hotDetailBundle=new Bundle();
-        hotDetailBundle.putSerializable("hot",hotList.get(position));
+        hotDetailBundle.putSerializable("Hot",hotList.get(position));
         hotDetailIntent.putExtras(hotDetailBundle);
         startActivity(hotDetailIntent);
     }

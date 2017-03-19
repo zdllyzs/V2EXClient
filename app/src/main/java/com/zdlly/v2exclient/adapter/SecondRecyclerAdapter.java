@@ -10,7 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zdlly.v2exclient.R;
-import com.zdlly.v2exclient.bean.latest;
+import com.zdlly.v2exclient.bean.Latest;
+import com.zdlly.v2exclient.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -21,10 +22,19 @@ import java.util.List;
 public class SecondRecyclerAdapter extends RecyclerView.Adapter<SecondRecyclerAdapter.MyViewHolder> {
 
     private Context context;
-    private List<latest> latestList;
+    private List<Latest> latestList;
     private LayoutInflater layoutInflater;
 
-    public SecondRecyclerAdapter(Context context, List<latest> latestList) {
+
+
+    private OnItemClickListener listener;
+
+
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public SecondRecyclerAdapter(Context context, List<Latest> latestList) {
         this.context = context;
         this.latestList=latestList;
         layoutInflater=LayoutInflater.from(context);
@@ -51,7 +61,7 @@ public class SecondRecyclerAdapter extends RecyclerView.Adapter<SecondRecyclerAd
         return latestList.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView photo;
         TextView name;
@@ -63,6 +73,14 @@ public class SecondRecyclerAdapter extends RecyclerView.Adapter<SecondRecyclerAd
             photo= (ImageView) itemView.findViewById(R.id.photo);
             name= (TextView) itemView.findViewById(R.id.name);
             title= (TextView) itemView.findViewById(R.id.title);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(listener!=null){
+                listener.onItemClick(v);
+            }
         }
     }
 }

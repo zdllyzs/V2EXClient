@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zdlly.v2exclient.R;
-import com.zdlly.v2exclient.bean.hot;
+import com.zdlly.v2exclient.bean.Hot;
 import com.zdlly.v2exclient.listener.OnItemClickListener;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstRecyclerAdapter.MyViewHolder> {
 
     private Context context;
-    private List<hot> hotList;
+    private List<Hot> hotList;
     private LayoutInflater layoutInflater;
 
 
@@ -34,7 +34,7 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstRecyclerAdap
         this.listener = listener;
     }
 
-    public FirstRecyclerAdapter(Context context, List<hot> hotList) {
+    public FirstRecyclerAdapter(Context context, List<Hot> hotList) {
         this.context = context;
         this.hotList = hotList;
         layoutInflater=LayoutInflater.from(context);

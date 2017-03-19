@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by zdlly on 2017/3/16.
  */
 
-public class latest implements Serializable{
+public class Latest implements Serializable{
 
     /**
      * id : 347929

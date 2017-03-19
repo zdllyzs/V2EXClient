@@ -1,7 +1,6 @@
 package com.zdlly.v2exclient.network;
 
-import com.zdlly.v2exclient.bean.hot;
-import com.zdlly.v2exclient.bean.latest;
+import com.zdlly.v2exclient.bean.Latest;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ import retrofit2.http.GET;
 
 public interface LatestService {
     @GET("api/topics/latest.json")
-    Call<List<latest>> getLatestLists();
+    Call<List<Latest>> getLatestLists();
 }

@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.zdlly.v2exclient.R;
-import com.zdlly.v2exclient.bean.hot;
+import com.zdlly.v2exclient.bean.Hot;
 
 public class HotDetailActivity extends AppCompatActivity {
 
-    private hot hot;
+    private Hot hot;
     private TextView hotDetail;
 
     @Override
@@ -29,8 +29,13 @@ public class HotDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "评论功能尚未完成", Snackbar.LENGTH_LONG)
+                        .setAction("回复", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }).show();
             }
         });
         initData();
@@ -38,7 +43,7 @@ public class HotDetailActivity extends AppCompatActivity {
 
     private void initData() {
         Intent intent = this.getIntent();
-        hot = (com.zdlly.v2exclient.bean.hot) intent.getSerializableExtra("hot");
+        hot = (Hot) intent.getSerializableExtra("Hot");
 
         hotDetail.setText(hot.getContent());
     }

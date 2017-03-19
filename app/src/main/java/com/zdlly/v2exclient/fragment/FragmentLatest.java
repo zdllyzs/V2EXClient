@@ -1,6 +1,7 @@
 package com.zdlly.v2exclient.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.zdlly.v2exclient.R;
+import com.zdlly.v2exclient.activity.LatestDetailActivity;
 import com.zdlly.v2exclient.adapter.SecondRecyclerAdapter;
-import com.zdlly.v2exclient.bean.latest;
+import com.zdlly.v2exclient.bean.Latest;
+import com.zdlly.v2exclient.listener.OnItemClickListener;
 import com.zdlly.v2exclient.network.LatestService;
 
 import java.util.List;
@@ -25,10 +28,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FragmentLatest extends Fragment implements Callback<List<latest>>, SwipeRefreshLayout.OnRefreshListener {
+public class FragmentLatest extends Fragment implements Callback<List<Latest>>, SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
     private RecyclerView secondRecycler;
-    private List<latest> latestList;
+    private List<Latest> latestList;
     private SwipeRefreshLayout swipeRefresh;
+    private SecondRecyclerAdapter secondRecyclerAdapter;
 
 
     Retrofit retrofit = new Retrofit.Builder().
@@ -38,7 +42,7 @@ public class FragmentLatest extends Fragment implements Callback<List<latest>>, 
 
     LatestService service=retrofit.create(LatestService.class);
 
-    Call<List<latest>> call=service.getLatestLists();
+    Call<List<Latest>> call=service.getLatestLists();
 
     public FragmentLatest() {
     }
@@ -80,10 +84,13 @@ public class FragmentLatest extends Fragment implements Callback<List<latest>>, 
     }
 
     @Override
-    public void onResponse(Call<List<latest>> call, Response<List<latest>> response) {
+    public void onResponse(Call<List<Latest>> call, Response<List<Latest>> response) {
         latestList = response.body();
-        if(secondRecycler.getAdapter()==null)
-            secondRecycler.setAdapter(new SecondRecyclerAdapter(getContext(),latestList));
+        if(secondRecycler.getAdapter()==null) {
+            secondRecyclerAdapter = new SecondRecyclerAdapter(getContext(), latestList);
+            secondRecycler.setAdapter(secondRecyclerAdapter);
+            secondRecyclerAdapter.setListener(this);
+        }
         else {
             secondRecycler.getAdapter().notifyDataSetChanged();
             swipeRefresh.setRefreshing(false);
@@ -91,7 +98,17 @@ public class FragmentLatest extends Fragment implements Callback<List<latest>>, 
     }
 
     @Override
-    public void onFailure(Call<List<latest>> call, Throwable t) {
+    public void onFailure(Call<List<Latest>> call, Throwable t) {
         Toast.makeText(getContext(), "读取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(View view) {
+        int position=secondRecycler.getChildAdapterPosition(view);
+        Intent latestDetailIntent=new Intent(getContext(), LatestDetailActivity.class);
+        Bundle latestDetailBundle=new Bundle();
+        latestDetailBundle.putSerializable("latest",latestList.get(position));
+        latestDetailIntent.putExtras(latestDetailBundle);
+        startActivity(latestDetailIntent);
     }
 }
