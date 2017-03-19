@@ -122,7 +122,7 @@ public class hot implements Serializable{
         this.last_touched = last_touched;
     }
 
-    public static class MemberBean {
+    public static class MemberBean implements Serializable {
         /**
          * id : 85913
          * username : a1310747
@@ -188,7 +188,7 @@ public class hot implements Serializable{
         }
     }
 
-    public static class NodeBean {
+    public static class NodeBean implements Serializable {
         /**
          * id : 300
          * name : programmer

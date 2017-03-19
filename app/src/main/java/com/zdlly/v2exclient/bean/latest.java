@@ -1,10 +1,12 @@
 package com.zdlly.v2exclient.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zdlly on 2017/3/16.
  */
 
-public class latest {
+public class latest implements Serializable{
 
     /**
      * id : 347929
@@ -182,7 +184,7 @@ public class latest {
         this.last_touched = last_touched;
     }
 
-    public static class MemberBean {
+    public static class MemberBean implements Serializable{
         /**
          * id : 217713
          * username : raquant
@@ -248,7 +250,7 @@ public class latest {
         }
     }
 
-    public static class NodeBean {
+    public static class NodeBean implements Serializable {
         /**
          * id : 12
          * name : qna
