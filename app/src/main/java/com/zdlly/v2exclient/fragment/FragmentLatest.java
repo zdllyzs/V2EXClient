@@ -105,7 +105,7 @@ public class FragmentLatest extends Fragment implements Callback<List<Latest>>, 
     @Override
     public void onItemClick(View view) {
         int position=secondRecycler.getChildAdapterPosition(view);
-        Intent latestDetailIntent=new Intent(getContext(), LatestDetailActivity.class);
+        Intent latestDetailIntent=new Intent(getActivity(), LatestDetailActivity.class);
         Bundle latestDetailBundle=new Bundle();
         latestDetailBundle.putSerializable("latest",latestList.get(position));
         latestDetailIntent.putExtras(latestDetailBundle);
