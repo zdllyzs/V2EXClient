@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity
         fragmentList.add(fragmentHot);
         fragmentList.add(fragmentLatest);
 
-        stringList.add("最新");
         stringList.add("最热");
+        stringList.add("最新");
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
