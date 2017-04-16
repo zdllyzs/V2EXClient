@@ -1,5 +1,6 @@
 package com.zdlly.v2exclient.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zdlly.v2exclient.R;
 import com.zdlly.v2exclient.adapter.MyPagerAdapter;
@@ -27,14 +30,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-
+    public static int LOGINSTATE = 0;
     private static final String TAG = "list";
     ViewPager viewPager;
     TabLayout tabLayout;
     List<Fragment> fragmentList;
     List<String> stringList;
-    ;
-
+    private ImageView userimage;
+    private TextView username;
+    private TextView usertag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +128,21 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        fragmentList=new ArrayList<>();
-        stringList=new ArrayList<>();
+        fragmentList = new ArrayList<>();
+        stringList = new ArrayList<>();
+        NavigationView nv = (NavigationView) drawer.findViewById(R.id.nav_view);
 
+        userimage= (ImageView) nv.getHeaderView(0).findViewById(R.id.user_image);
+        username= (TextView) nv.getHeaderView(0).findViewById(R.id.username);
+        usertag= (TextView) nv.getHeaderView(0).findViewById(R.id.user_tag);
+
+        userimage.setOnClickListener(this);
+        drawer.setOnClickListener(this);
     }
 
-    private void initControls(){
-        FragmentHot fragmentHot=new FragmentHot();
-        FragmentLatest fragmentLatest=new FragmentLatest();
+    private void initControls() {
+        FragmentHot fragmentHot = new FragmentHot();
+        FragmentLatest fragmentLatest = new FragmentLatest();
 
         fragmentList.add(fragmentHot);
         fragmentList.add(fragmentLatest);
@@ -144,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText(stringList.get(0)));
         tabLayout.addTab(tabLayout.newTab().setText(stringList.get(1)));
 
-        MyPagerAdapter myPagerAdapter=new MyPagerAdapter(getSupportFragmentManager(),fragmentList,stringList);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList, stringList);
 
         viewPager.setAdapter(myPagerAdapter);
 
@@ -153,6 +164,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.user_image:
+                if(LOGINSTATE==0){
+                    Intent intent=new Intent(this,LoginActivity.class);
+                    startActivity(intent);
+                }
+        }
     }
 }

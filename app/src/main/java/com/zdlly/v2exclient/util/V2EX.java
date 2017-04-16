@@ -10,6 +10,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.zdlly.v2exclient.model.LoginFormModel;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -89,7 +90,7 @@ public class V2EX {
         new AsyncHttpClient().get(context, API_URL + API_TOPIC + "?node_id=" + nodeId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
-                sharedPreferences.edit().putString("topics_" + nodeId + "_cache", response.toString()).commit();
+                sharedPreferences.edit().putString("topics_" + nodeId + "_cache", response.toString()).apply();
                 responseHandler.onSuccess(statusCode, headers, response);
             }
 
@@ -118,7 +119,7 @@ public class V2EX {
         new AsyncHttpClient().get(context, API_URL + API_TOPIC + "?username=" + username, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONArray response) {
-                sharedPreferences.edit().putString("topics_" + username + "_cache", response.toString()).commit();
+                sharedPreferences.edit().putString("topics_" + username + "_cache", response.toString()).apply();
                 responseHandler.onSuccess(statusCode, headers, response);
             }
 
@@ -209,6 +210,7 @@ public class V2EX {
 
     public static void getOnceCode(Context context, String url, final JsonHttpResponseHandler responseHandler){
         AsyncHttpClient client = getClient(context);
+
         client.get(url, new TextHttpResponseHandler(){
             @Override
             public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
@@ -217,16 +219,16 @@ public class V2EX {
 
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseBody) {
-//                DebugUtils.log(responseBody);
                 JSONObject result = new JSONObject();
-                Pattern pattern = Pattern.compile("<input type=\"hidden\" value=\"([0-9]+)\" name=\"once\" />");
-                final Matcher matcher = pattern.matcher(responseBody);
+                LoginFormModel formModel=JsoupUtil.parseLoginFormInfo(responseBody);
                 try {
-                    if(matcher.find()){
+                    if(null != formModel.getOnce()){
                         result.put("result", "ok");
 
                         JSONObject jsonContent = new JSONObject();
-                        jsonContent.put("once", Integer.parseInt(matcher.group(1)));
+                        jsonContent.put("once", formModel.getOnce());
+                        jsonContent.put("username",formModel.getNameKey());
+                        jsonContent.put("password",formModel.getPswKey());
 
                         result.put("content", jsonContent);
                     }else{
@@ -250,16 +252,16 @@ public class V2EX {
      *      }
      * }
      */
-    public static void login(final Context context, String username, String password, int onceCode, final JsonHttpResponseHandler responseHandler){
+    public static void login(final Context context, String username, String password,LoginFormModel formModel, int onceCode, final JsonHttpResponseHandler responseHandler){
         AsyncHttpClient client = getClient(context);
         client.addHeader("Origin", "https://www.v2ex.com");
         client.addHeader("Referer", "https://www.v2ex.com/signin");
         client.addHeader("Content-Type", "application/x-www-form-urlencoded");
         RequestParams params = new RequestParams();
-        params.put("next", "/");
-        params.put("u", username);
+        params.put(formModel.getNameKey(), username);
+        params.put(formModel.getPswKey(), password);
         params.put("once", String.valueOf(onceCode));
-        params.put("p", password);
+        params.put("next", "%2F");
         client.post("https://www.v2ex.com/signin", params, new TextHttpResponseHandler() {
 
             @Override
@@ -279,7 +281,6 @@ public class V2EX {
 
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseBody) {
-//                DebugUtils.log(responseBody);
                 JSONObject result = new JSONObject();
                 try {
                     result.put("result", "fail");
@@ -400,7 +401,7 @@ public class V2EX {
                     }else{
                         result.put("result", "fail");
                     }
-                    responseHandler.onSuccess(statusCode, (cz.msebera.android.httpclient.Header[]) headers, result);
+                    responseHandler.onSuccess(statusCode, headers, result);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
